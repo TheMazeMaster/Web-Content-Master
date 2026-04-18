@@ -2,7 +2,7 @@
   "routes": [
     {
       "src": "/(.*)\\.md",
-      "dest": "/render-md"
+      "dest": "/api/render-md?path=$1"
     }
   ]
 }
