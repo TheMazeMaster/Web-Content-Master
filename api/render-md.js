@@ -73,6 +73,15 @@ function markdownToHtml(md) {
       continue;
     }
 
+    if (trimmed.startsWith('> ')) {
+      if (inList) {
+        html += '</ul>';
+        inList = false;
+      }
+      html += `<blockquote>${parseInline(escapeHtml(trimmed.slice(2)))}</blockquote>`;
+      continue;
+    }
+
     if (inList) {
       html += '</ul>';
       inList = false;
@@ -126,10 +135,27 @@ export default async function handler(req, res) {
               line-height: 1.2;
               margin-top: 1.8em;
             }
-            h1 { margin-top: 0; }
-            p { margin: 1em 0; }
-            ul { margin: 1em 0; padding-left: 1.5em; }
-            hr { margin: 2em 0; border: 0; border-top: 1px solid #ccc; }
+            h1 {
+              margin-top: 0;
+            }
+            p {
+              margin: 1em 0;
+            }
+            ul {
+              margin: 1em 0;
+              padding-left: 1.5em;
+            }
+            hr {
+              margin: 2em 0;
+              border: 0;
+              border-top: 1px solid #ccc;
+            }
+            blockquote {
+              margin: 1em 0 1em 1.5em;
+              padding-left: 1em;
+              border-left: 3px solid #999;
+              color: #333;
+            }
           </style>
         </head>
         <body>${content}</body>
