@@ -12,59 +12,89 @@ function parseInline(text) {
     .replace(/\*(.+?)\*/g, '<em>$1</em>');
 }
 
+function renderParagraph(buffer) {
+  const joined = buffer.map(line => escapeHtml(line)).join('<br>');
+  return `<p>${parseInline(joined)}</p>`;
+}
+
+function renderBlockquote(buffer) {
+  const joined = buffer.map(line => escapeHtml(line)).join('<br>');
+  return `<blockquote>${parseInline(joined)}</blockquote>`;
+}
+
 function markdownToHtml(md) {
   const lines = md.split('\n');
   let html = '';
   let inList = false;
+  let paragraphBuffer = [];
+  let blockquoteBuffer = [];
+
+  function flushParagraph() {
+    if (paragraphBuffer.length > 0) {
+      html += renderParagraph(paragraphBuffer);
+      paragraphBuffer = [];
+    }
+  }
+
+  function flushBlockquote() {
+    if (blockquoteBuffer.length > 0) {
+      html += renderBlockquote(blockquoteBuffer);
+      blockquoteBuffer = [];
+    }
+  }
+
+  function closeList() {
+    if (inList) {
+      html += '</ul>';
+      inList = false;
+    }
+  }
 
   for (let line of lines) {
     const trimmed = line.trim();
 
     if (trimmed === '') {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
+      flushParagraph();
+      flushBlockquote();
+      closeList();
       continue;
     }
 
     if (trimmed === '---') {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
+      flushParagraph();
+      flushBlockquote();
+      closeList();
       html += '<hr>';
       continue;
     }
 
     if (trimmed.startsWith('### ')) {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
+      flushParagraph();
+      flushBlockquote();
+      closeList();
       html += `<h3>${parseInline(escapeHtml(trimmed.slice(4)))}</h3>`;
       continue;
     }
 
     if (trimmed.startsWith('## ')) {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
+      flushParagraph();
+      flushBlockquote();
+      closeList();
       html += `<h2>${parseInline(escapeHtml(trimmed.slice(3)))}</h2>`;
       continue;
     }
 
     if (trimmed.startsWith('# ')) {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
+      flushParagraph();
+      flushBlockquote();
+      closeList();
       html += `<h1>${parseInline(escapeHtml(trimmed.slice(2)))}</h1>`;
       continue;
     }
 
     if (trimmed.startsWith('- ')) {
+      flushParagraph();
+      flushBlockquote();
       if (!inList) {
         html += '<ul>';
         inList = true;
@@ -74,25 +104,20 @@ function markdownToHtml(md) {
     }
 
     if (trimmed.startsWith('> ')) {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
-      html += `<blockquote>${parseInline(escapeHtml(trimmed.slice(2)))}</blockquote>`;
+      flushParagraph();
+      closeList();
+      blockquoteBuffer.push(trimmed.slice(2));
       continue;
     }
 
-    if (inList) {
-      html += '</ul>';
-      inList = false;
-    }
-
-    html += `<p>${parseInline(escapeHtml(trimmed))}</p>`;
+    flushBlockquote();
+    closeList();
+    paragraphBuffer.push(trimmed);
   }
 
-  if (inList) {
-    html += '</ul>';
-  }
+  flushParagraph();
+  flushBlockquote();
+  closeList();
 
   return html;
 }
