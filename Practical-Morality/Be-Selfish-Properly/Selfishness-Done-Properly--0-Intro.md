@@ -1,7 +1,7 @@
 ## Why Being Selfish Is the Only Option
 
 # 0. Introduction
-TESTETSETTEST
+
 You should prioritise yourself. It's important to say this clearly because many people often interpret it as selfish, cold, arrogant, or morally questionable. It might sound like justifying poor behaviour or treating immaturity as self-care, but that’s not the intention here. In fact, the message is quite the opposite.
 
 Much of what is labelled as selfishness is not true self-interest; it often stems from impulse, defensiveness, fear, or ego. It's a way for someone to seek temporary relief while unintentionally harming their future self.
