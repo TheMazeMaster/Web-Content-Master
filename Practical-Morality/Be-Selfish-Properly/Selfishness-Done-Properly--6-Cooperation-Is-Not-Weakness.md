@@ -1,4 +1,6 @@
-# 6. Cooperation is strength that does not need to turn the other person into an enemy.
+# 6. Cooperation Is Not Weakness
+
+## Cooperation is strength that does not need to turn the other person into an enemy.
 
 One of the quickest ways to lose a relationship is to treat every difficult moment like a battle.
 
