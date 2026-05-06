@@ -1,8 +1,10 @@
-# 5. The moment another person becomes a tool, you stop meeting them as a person.
+# 5. Do Not Turn People Into Props
+
+## The moment another person becomes a tool, you stop meeting them as a person.
 
 One of the quickest ways to damage a relationship is to stop seeing the other person as a person. While this might seem obvious, it can happen quietly and subtly. At times, this behaviour may not appear cruel from the outside; it might even look like concern, advice, or "I’m just trying to help." It can take the form of planning, managing, fixing, improving, guiding, protecting, or maintaining stability.
 
-However, beneath the surface, something has changed. The other person is no longer being genuinely met; instead, they are being handled. They turn into a problem to solve, a mood to manage, a reaction to prevent, a risk to control, a source of reassurance, a threat to neutralize, a role to maintain, or a prop in the narrative you are trying to uphold.
+However, beneath the surface, something has changed. The other person is no longer being genuinely met; instead, they are being handled. They turn into a problem to solve, a mood to manage, a reaction to prevent, a risk to control, a source of reassurance, a threat to neutralise, a role to maintain, or a prop in the narrative you are trying to uphold.
 
 When someone becomes a prop, you lose the ability to see them clearly. You no longer connect with the person in front of you; instead, you see them through the lens of how they serve your needs. You perceive them based on the comfort they provide, the fears they evoke, the approval they offer, the shame they induce, the stability they bring, or the risks they represent.
 
