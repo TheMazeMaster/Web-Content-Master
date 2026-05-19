@@ -2,7 +2,7 @@
 
 ## A grounded guide to difference, polarity, archetype, shadow, and the inner dance between structure and connection
 
-# I# Introduction
+## Introduction
 
 The Masculine-Feminine Map is an exploration of the patterns that shape how people relate, protect, pursue, withdraw, love, harden, soften, misread, and heal.
 
