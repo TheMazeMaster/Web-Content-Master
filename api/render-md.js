@@ -22,12 +22,57 @@ function renderBlockquote(buffer) {
   return `<blockquote>${parseInline(joined)}</blockquote>`;
 }
 
+function splitTableRow(line) {
+  let cleaned = line.trim();
+
+  if (cleaned.startsWith('|')) cleaned = cleaned.slice(1);
+  if (cleaned.endsWith('|')) cleaned = cleaned.slice(0, -1);
+
+  return cleaned.split('|').map(cell => cell.trim());
+}
+
+function isTableSeparator(line) {
+  const cells = splitTableRow(line);
+  return cells.length > 0 && cells.every(cell => /^:?-{3,}:?$/.test(cell));
+}
+
+function renderTable(rows) {
+  if (rows.length < 2) return '';
+
+  const headerCells = splitTableRow(rows[0]);
+  const bodyRows = rows.slice(2);
+
+  let html = '<div class="table-wrap"><table><thead><tr>';
+
+  for (const cell of headerCells) {
+    html += `<th>${parseInline(escapeHtml(cell))}</th>`;
+  }
+
+  html += '</tr></thead><tbody>';
+
+  for (const row of bodyRows) {
+    const cells = splitTableRow(row);
+    html += '<tr>';
+
+    for (const cell of cells) {
+      html += `<td>${parseInline(escapeHtml(cell))}</td>`;
+    }
+
+    html += '</tr>';
+  }
+
+  html += '</tbody></table></div>';
+
+  return html;
+}
+
 function markdownToHtml(md) {
   const lines = md.split('\n');
   let html = '';
   let inList = false;
   let paragraphBuffer = [];
   let blockquoteBuffer = [];
+  let tableBuffer = [];
 
   function flushParagraph() {
     if (paragraphBuffer.length > 0) {
@@ -43,6 +88,13 @@ function markdownToHtml(md) {
     }
   }
 
+  function flushTable() {
+    if (tableBuffer.length > 0) {
+      html += renderTable(tableBuffer);
+      tableBuffer = [];
+    }
+  }
+
   function closeList() {
     if (inList) {
       html += '</ul>';
@@ -50,8 +102,32 @@ function markdownToHtml(md) {
     }
   }
 
-  for (let line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const trimmed = line.trim();
+    const nextLine = lines[i + 1] ? lines[i + 1].trim() : '';
+
+    const startsTable =
+      trimmed.includes('|') &&
+      nextLine.includes('|') &&
+      isTableSeparator(nextLine);
+
+    const continuesTable =
+      tableBuffer.length > 0 &&
+      trimmed.includes('|') &&
+      trimmed !== '';
+
+    if (startsTable || continuesTable) {
+      flushParagraph();
+      flushBlockquote();
+      closeList();
+      tableBuffer.push(trimmed);
+      continue;
+    }
+
+    if (tableBuffer.length > 0) {
+      flushTable();
+    }
 
     if (trimmed === '') {
       flushParagraph();
@@ -117,6 +193,7 @@ function markdownToHtml(md) {
 
   flushParagraph();
   flushBlockquote();
+  flushTable();
   closeList();
 
   return html;
@@ -180,6 +257,25 @@ export default async function handler(req, res) {
               padding-left: 1em;
               border-left: 3px solid #999;
               color: #333;
+            }
+            .table-wrap {
+              overflow-x: auto;
+              margin: 1.5em 0;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.95em;
+            }
+            th, td {
+              border: 1px solid #ccc;
+              padding: 0.6em 0.8em;
+              text-align: left;
+              vertical-align: top;
+            }
+            th {
+              font-weight: bold;
+              background: #f5f5f5;
             }
           </style>
         </head>
